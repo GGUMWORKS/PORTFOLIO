@@ -13,6 +13,10 @@
       --line:rgba(255,255,255,.12);
       --glass:rgba(0,0,0,.45);
       --max:1200px;
+
+      /* transition */
+      --t: 520ms;
+      --ease: cubic-bezier(.22,1,.36,1);
     }
 
     *{box-sizing:border-box}
@@ -43,13 +47,7 @@
     a{color:inherit; text-decoration:none}
 
     .wrap{max-width:var(--max); margin:0 auto; padding:0 28px}
-
-    .wrap-full{
-      width:100%;
-      max-width:none;
-      margin:0;
-      padding:0 28px;
-    }
+    .wrap-full{width:100%; max-width:none; margin:0; padding:0 28px;}
 
     .nav{
       position:fixed; top:0; left:0; right:0;
@@ -128,24 +126,37 @@
     .panel{
       width:100%;
       padding:90px 0 80px;
+      transition: opacity var(--t) var(--ease);
     }
+    body.is-switching .panel{opacity:0;}
 
-    /* sections */
+    /* sections (smooth show/hide) */
     .section{
-      display:none;
-      animation: fade .22s ease;
+      display:block;
+      opacity:0;
+      transform: translateY(12px);
+      pointer-events:none;
+      max-height:0;
+      overflow:hidden;
+      transition:
+        opacity var(--t) var(--ease),
+        transform var(--t) var(--ease);
       scroll-margin-top:88px;
     }
-    .section.active{display:block}
-    @keyframes fade{
-      from{opacity:0; transform: translateY(6px)}
-      to{opacity:1; transform: translateY(0)}
+    .section.active{
+      opacity:1;
+      transform: translateY(0);
+      pointer-events:auto;
+      max-height:9999px;
     }
 
     /* HOME */
     .home{
       text-align:center;
       padding:80px 0 60px;
+      transition:
+        opacity var(--t) var(--ease),
+        transform var(--t) var(--ease);
     }
     .title{
       margin:0 0 40px;
@@ -169,12 +180,18 @@
       color:var(--muted);
       letter-spacing:.4px;
     }
-    .subtitle b{
-      color:var(--text);
-      font-weight:700;
+    .subtitle b{color:var(--text); font-weight:700;}
+
+    body.view-mode .home{
+      opacity:0;
+      transform: translateY(-8px);
+      pointer-events:none;
+      height:0;
+      overflow:hidden;
+      padding:0;
     }
 
-    /* content blocks */
+    /* default blocks (PROJECT/PRIZE/CONTACT에 유지) */
     .block{
       max-width:900px;
       margin:0 auto;
@@ -183,17 +200,8 @@
       background: rgba(255,255,255,.03);
       padding:22px;
     }
-    .h2{
-      margin:0 0 10px;
-      font-size:18px;
-      letter-spacing:-.2px;
-    }
-    .p{
-      margin:0;
-      color:var(--muted);
-      line-height:1.8;
-      font-size:14px;
-    }
+    .h2{margin:0 0 10px; font-size:18px; letter-spacing:-.2px;}
+    .p{margin:0; color:var(--muted); line-height:1.8; font-size:14px;}
 
     .grid{
       margin-top:14px;
@@ -231,55 +239,6 @@
       border-top:1px solid rgba(255,255,255,.65);
       background: rgba(0,0,0,.18);
     }
-/* ✅ 전환 속도(원하면 여기만 숫자 조절) */
-:root{
-  --t: 520ms;          /* 전체 전환 시간 */
-  --ease: cubic-bezier(.22,1,.36,1);
-}
-
-/* 섹션을 display로 끊지 말고, 부드럽게 숨김/표시 */
-.section{
-  display:block;                 /* 기존 display:none 대신 */
-  opacity:0;
-  transform: translateY(12px);
-  pointer-events:none;
-  max-height:0;
-  overflow:hidden;
-  transition:
-    opacity var(--t) var(--ease),
-    transform var(--t) var(--ease);
-}
-
-.section.active{
-  opacity:1;
-  transform: translateY(0);
-  pointer-events:auto;
-  max-height:9999px;
-}
-
-/* 홈도 같은 방식으로 전환 */
-.home{
-  transition:
-    opacity var(--t) var(--ease),
-    transform var(--t) var(--ease);
-}
-
-body.view-mode .home{
-  opacity:0;
-  transform: translateY(-8px);
-  pointer-events:none;
-  height:0;
-  overflow:hidden;
-  padding:0;  /* 홈 패딩 제거로 화면 전환이 더 깔끔 */
-}
-
-/* 전체 화면도 살짝 페이드(씬 전환 느낌) */
-.panel{
-  transition: opacity var(--t) var(--ease);
-}
-body.is-switching .panel{
-  opacity:0;
-}
 
     @media (max-width: 860px){
       .title{font-size:44px}
@@ -288,18 +247,113 @@ body.is-switching .panel{
       .menu{font-size:13px; letter-spacing:.6px}
     }
 
-    /* ===========================
-       ✅ NEW SCREEN MODE (추가)
-       홈 화면은 그대로, 탭 눌렀을 때만 적용됨
-       =========================== */
+    /* view mode spacing */
     body.view-mode main{ align-items:flex-start; }
-    body.view-mode .home{
-      display:none;
-      animation:none;
+    body.view-mode .panel{ padding:40px 0 80px; }
+
+    /* ===========================
+       ABOUT 레퍼런스 레이아웃 (추가/반영)
+       =========================== */
+
+    .about-shell{
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 72px 28px 90px;
+      background: #ffffff;
+      color: #111;
     }
-    body.view-mode .panel{
-      padding:40px 0 80px; /* 탭 화면에서 위 여백만 살짝 정리 (홈에는 영향 없음) */
+
+    .about-head{
+      text-align:center;
+      margin-bottom: 44px;
     }
+    .about-title{
+      margin:0 0 10px;
+      font-size: 54px;
+      letter-spacing: -0.6px;
+      font-weight: 700;
+      text-transform: lowercase;
+    }
+    .about-subnav{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:10px;
+      font-size: 12px;
+      letter-spacing: .2px;
+      color: rgba(0,0,0,.45);
+      text-transform: lowercase;
+    }
+    .about-subnav a{
+      color: rgba(0,0,0,.45);
+    }
+    .about-subnav a.active{
+      color: rgba(0,0,0,.78);
+      font-weight: 700;
+    }
+
+    .about-hero{
+      text-align:center;
+      padding: 28px 0 34px;
+    }
+    .about-quote{
+      margin:0 0 18px;
+      font-size: 40px;
+      font-weight: 700;
+      letter-spacing: -0.6px;
+      color:#111;
+    }
+    .about-rule{
+      width: 72%;
+      height: 1px;
+      margin: 0 auto;
+      background: rgba(0,0,0,.22);
+    }
+
+    .about-list{
+      margin-top: 18px;
+      border-top: 1px solid rgba(0,0,0,.10);
+    }
+    .about-item{
+      display:grid;
+      grid-template-columns: 56px 1fr;
+      gap: 18px;
+      padding: 22px 0;
+      border-bottom: 1px solid rgba(0,0,0,.10);
+    }
+    .about-ico{
+      width: 56px;
+      height: 56px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size: 22px;
+      color: rgba(0,0,0,.45);
+      user-select:none;
+    }
+    .about-txt h3{
+      margin: 0 0 8px;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: -0.2px;
+      color:#111;
+    }
+    .about-txt p{
+      margin:0;
+      font-size: 13px;
+      line-height: 1.9;
+      color: rgba(0,0,0,.68);
+    }
+
+    @media (max-width: 860px){
+      .about-shell{ padding: 54px 18px 70px; }
+      .about-title{ font-size: 38px; }
+      .about-quote{ font-size: 26px; }
+      .about-item{ grid-template-columns: 44px 1fr; gap: 14px; }
+      .about-ico{ width:44px; height:44px; font-size:18px; }
+      .about-rule{ width: 92%; }
+    }
+
   </style>
 </head>
 
@@ -331,26 +385,60 @@ body.is-switching .panel{
         <p class="subtitle">DESIGN STUDIO <b>GGUMWORKS</b></p>
       </div>
 
-      <!-- INFO -->
+      <!-- ABOUT (id는 info 그대로 유지) -->
       <section id="info" class="section">
-        <div class="block">
-          <p class="h2">ABOUT</p>
-          <p class="p">
-            여기에 감독님 소개, 핵심 키워드, 작업 철학을 넣습니다.<br/>
-            예: 공간과 이미지를 통해 서사를 구조화하고, 감각과 논리를 연결해 흐름을 설계합니다.
-          </p>
-          <div class="grid">
-            <div class="card">
-              <p class="t">Focus</p>
-              <p class="d">Spatial Narrative · Stage / Pop-up · Cinematic Direction</p>
-              <div class="pill">direction</div>
-            </div>
-            <div class="card">
-              <p class="t">Tools</p>
-              <p class="d">Unreal · Midjourney · DaVinci · Adobe</p>
-              <div class="pill">pipeline</div>
-            </div>
-          </div>
+        <div class="about-shell">
+
+          <header class="about-head">
+            <h2 class="about-title">about</h2>
+            <nav class="about-subnav" aria-label="About sub navigation">
+              <a class="active" href="#" onclick="return false;">about</a>
+              <span>·</span>
+              <a href="#" onclick="return false;">contact</a>
+              <span>·</span>
+              <a href="#" onclick="return false;">organization</a>
+            </nav>
+          </header>
+
+          <section class="about-hero" aria-label="About quote">
+            <p class="about-quote">“emotions, in the moment.”</p>
+            <div class="about-rule"></div>
+          </section>
+
+          <section class="about-list" aria-label="About statements">
+            <article class="about-item">
+              <div class="about-ico" aria-hidden="true">♡</div>
+              <div class="about-txt">
+                <h3>관객과 공감하며 감정을 나누는 경험</h3>
+                <p>공간과 이미지를 통해 서사를 구조화하고, 감각과 논리를 연결해 흐름을 설계합니다.</p>
+              </div>
+            </article>
+
+            <article class="about-item">
+              <div class="about-ico" aria-hidden="true">◎</div>
+              <div class="about-txt">
+                <h3>예술과 기술의 경계를 허무는 제작</h3>
+                <p>Unreal, AI 기반 파이프라인을 통해 기획부터 프리비주얼까지 빠르게 검증합니다.</p>
+              </div>
+            </article>
+
+            <article class="about-item">
+              <div class="about-ico" aria-hidden="true">◍</div>
+              <div class="about-txt">
+                <h3>무대, 팝업, 영상의 하나의 언어</h3>
+                <p>장르를 넘나들며 동일한 세계관과 미장센을 유지하는 연출 구조를 만듭니다.</p>
+              </div>
+            </article>
+
+            <article class="about-item">
+              <div class="about-ico" aria-hidden="true">↗</div>
+              <div class="about-txt">
+                <h3>글로벌 감각을 향한 확장</h3>
+                <p>브랜드, 공연, 공간 경험을 연결해 더 넓은 관객과 시장으로 확장합니다.</p>
+              </div>
+            </article>
+          </section>
+
         </div>
       </section>
 
@@ -422,7 +510,6 @@ body.is-switching .panel{
   </footer>
 
   <script>
-  // footer year
   const y = document.getElementById('y');
   if (y) y.textContent = new Date().getFullYear();
 
@@ -439,7 +526,6 @@ body.is-switching .panel{
     });
   }
 
-  // ✅ "새 화면" 전환: 더 느리고 자연스럽게
   function activate(id){
     document.body.classList.add('is-switching');
 
@@ -476,13 +562,11 @@ body.is-switching .panel{
     }, 220);
   }
 
-  // ✅ 탭 버튼 클릭 연결 (이게 없어서 안 눌렸던 것)
   tabs.forEach(btn => {
     btn.setAttribute('aria-selected', 'false');
     btn.addEventListener('click', () => activate(btn.dataset.target));
   });
 
-  // ✅ 좌측 브랜드 클릭, 엔터키 연결
   if (brandHome){
     brandHome.addEventListener('click', goHome);
     brandHome.addEventListener('keydown', (e) => {
@@ -490,9 +574,8 @@ body.is-switching .panel{
     });
   }
 
-  // 첫 화면은 히어로만 보이게
   history.replaceState(null, '', location.pathname);
-</script>
+  </script>
 
 </body>
 </html>
