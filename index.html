@@ -422,61 +422,77 @@ body.is-switching .panel{
   </footer>
 
   <script>
-    // footer year
-    const y = document.getElementById('y');
-    if (y) y.textContent = new Date().getFullYear();
+  // footer year
+  const y = document.getElementById('y');
+  if (y) y.textContent = new Date().getFullYear();
 
-    const tabs = document.querySelectorAll('.tab');
-    const sections = document.querySelectorAll('.section');
+  const tabs = document.querySelectorAll('.tab');
+  const sections = document.querySelectorAll('.section');
+  const brandHome = document.getElementById('brandHome');
+  const homeEl = document.getElementById('home');
 
-    function setAllInactive(){
-      sections.forEach(s => s.classList.remove('active'));
-      tabs.forEach(t => {
-        t.classList.remove('active');
-        t.setAttribute('aria-selected', 'false');
-      });
-    }
-   // ✅ "새 화면" 전환: 더 느리고 자연스럽게
-function activate(id){
-  // 씬 전환: 먼저 살짝 페이드아웃
-  document.body.classList.add('is-switching');
-
-  setTimeout(() => {
-    // NEW SCREEN MODE ON
-    document.body.classList.add('view-mode');
-
-    sections.forEach(s => s.classList.toggle('active', s.id === id));
+  function setAllInactive(){
+    sections.forEach(s => s.classList.remove('active'));
     tabs.forEach(t => {
-      const on = t.dataset.target === id;
-      t.classList.toggle('active', on);
-      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      t.classList.remove('active');
+      t.setAttribute('aria-selected', 'false');
     });
+  }
 
-    // 섹션 화면은 항상 위에서 시작
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  // ✅ "새 화면" 전환: 더 느리고 자연스럽게
+  function activate(id){
+    document.body.classList.add('is-switching');
 
-    // 페이드인
-    requestAnimationFrame(() => {
-      document.body.classList.remove('is-switching');
+    setTimeout(() => {
+      document.body.classList.add('view-mode');
+
+      sections.forEach(s => s.classList.toggle('active', s.id === id));
+      tabs.forEach(t => {
+        const on = t.dataset.target === id;
+        t.classList.toggle('active', on);
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      requestAnimationFrame(() => {
+        document.body.classList.remove('is-switching');
+      });
+    }, 220);
+  }
+
+  function goHome(){
+    document.body.classList.add('is-switching');
+
+    setTimeout(() => {
+      document.body.classList.remove('view-mode');
+      setAllInactive();
+
+      if (homeEl) homeEl.scrollIntoView({ behavior:'smooth', block:'start' });
+
+      requestAnimationFrame(() => {
+        document.body.classList.remove('is-switching');
+      });
+    }, 220);
+  }
+
+  // ✅ 탭 버튼 클릭 연결 (이게 없어서 안 눌렸던 것)
+  tabs.forEach(btn => {
+    btn.setAttribute('aria-selected', 'false');
+    btn.addEventListener('click', () => activate(btn.dataset.target));
+  });
+
+  // ✅ 좌측 브랜드 클릭, 엔터키 연결
+  if (brandHome){
+    brandHome.addEventListener('click', goHome);
+    brandHome.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') goHome();
     });
-  }, 220); // ← 더 느리게 하고 싶으면 300~360으로 올리면 됨
-}
+  }
 
-function goHome(){
-  document.body.classList.add('is-switching');
+  // 첫 화면은 히어로만 보이게
+  history.replaceState(null, '', location.pathname);
+</script>
 
-  setTimeout(() => {
-    // NEW SCREEN MODE OFF
-    document.body.classList.remove('view-mode');
-    setAllInactive();
-
-    if (homeEl) homeEl.scrollIntoView({ behavior:'smooth', block:'start' });
-
-    requestAnimationFrame(() => {
-      document.body.classList.remove('is-switching');
-    });
-  }, 220); // ← 동일하게 조절
-}
-  </script>
 </body>
 </html>
