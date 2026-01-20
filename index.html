@@ -268,7 +268,7 @@
   <main>
     <div class="wrap panel">
 
-     <div class="home">
+<div class="home" id="home">
   <h1 class="title">WOOHYUN KIM</h1>
 
   <p class="roles">
@@ -393,6 +393,29 @@
 
     // 첫 화면은 항상 히어로만 보이게: 주소의 #hash 제거
     history.replaceState(null, '', location.pathname);
+    const brandHome = document.getElementById('brandHome');
+const homeEl = document.getElementById('home');
+
+function goHome(){
+  // 섹션 닫기(열려있던 박스들 제거)
+  sections.forEach(s => s.classList.remove('active'));
+  // 메뉴 active도 제거
+  tabs.forEach(t => {
+    t.classList.remove('active');
+    t.setAttribute('aria-selected', 'false');
+  });
+  // 홈으로 스크롤
+  homeEl.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+// 클릭
+brandHome.addEventListener('click', goHome);
+
+// 엔터키로도 동작(접근성)
+brandHome.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' || e.key === ' ') goHome();
+});
+
   </script>
 </body>
 </html>
