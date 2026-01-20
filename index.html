@@ -77,6 +77,7 @@
       opacity:.92;
       user-select:none;
       white-space:nowrap;
+      cursor:pointer;
     }
     .brand small{
       font-weight:600;
@@ -249,10 +250,11 @@
 
   <div class="nav">
     <div class="wrap-full nav-inner">
-      <div class="brand">
-        GGUMWORKS
-        <small>DESIGN STUDIO</small>
-      </div>
+      
+      <div class="brand" id="brandHome" role="button" tabindex="0" aria-label="Go to Home">
+  GGUMWORKS
+  <small>DESIGN STUDIO</small>
+</div>
 
       <div class="menu" role="tablist" aria-label="Top Navigation">
         <button class="tab" data-target="info" role="tab" aria-selected="false">INFO</button>
