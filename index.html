@@ -231,6 +231,55 @@
       border-top:1px solid rgba(255,255,255,.65);
       background: rgba(0,0,0,.18);
     }
+/* ✅ 전환 속도(원하면 여기만 숫자 조절) */
+:root{
+  --t: 520ms;          /* 전체 전환 시간 */
+  --ease: cubic-bezier(.22,1,.36,1);
+}
+
+/* 섹션을 display로 끊지 말고, 부드럽게 숨김/표시 */
+.section{
+  display:block;                 /* 기존 display:none 대신 */
+  opacity:0;
+  transform: translateY(12px);
+  pointer-events:none;
+  max-height:0;
+  overflow:hidden;
+  transition:
+    opacity var(--t) var(--ease),
+    transform var(--t) var(--ease);
+}
+
+.section.active{
+  opacity:1;
+  transform: translateY(0);
+  pointer-events:auto;
+  max-height:9999px;
+}
+
+/* 홈도 같은 방식으로 전환 */
+.home{
+  transition:
+    opacity var(--t) var(--ease),
+    transform var(--t) var(--ease);
+}
+
+body.view-mode .home{
+  opacity:0;
+  transform: translateY(-8px);
+  pointer-events:none;
+  height:0;
+  overflow:hidden;
+  padding:0;  /* 홈 패딩 제거로 화면 전환이 더 깔끔 */
+}
+
+/* 전체 화면도 살짝 페이드(씬 전환 느낌) */
+.panel{
+  transition: opacity var(--t) var(--ease);
+}
+body.is-switching .panel{
+  opacity:0;
+}
 
     @media (max-width: 860px){
       .title{font-size:44px}
@@ -387,46 +436,47 @@
         t.setAttribute('aria-selected', 'false');
       });
     }
+   // ✅ "새 화면" 전환: 더 느리고 자연스럽게
+function activate(id){
+  // 씬 전환: 먼저 살짝 페이드아웃
+  document.body.classList.add('is-switching');
 
-    // ✅ "새 화면" 전환: 홈 숨기기 + 섹션만 보여주기 + 위로 스크롤
-    function activate(id){
-      document.body.classList.add('view-mode'); // NEW SCREEN MODE ON
+  setTimeout(() => {
+    // NEW SCREEN MODE ON
+    document.body.classList.add('view-mode');
 
-      sections.forEach(s => s.classList.toggle('active', s.id === id));
-      tabs.forEach(t => {
-        const on = t.dataset.target === id;
-        t.classList.toggle('active', on);
-        t.setAttribute('aria-selected', on ? 'true' : 'false');
-      });
-
-      // 섹션 화면은 항상 위에서 시작(스크롤 전환 느낌)
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    tabs.forEach(btn => {
-      btn.setAttribute('aria-selected', 'false');
-      btn.addEventListener('click', () => activate(btn.dataset.target));
+    sections.forEach(s => s.classList.toggle('active', s.id === id));
+    tabs.forEach(t => {
+      const on = t.dataset.target === id;
+      t.classList.toggle('active', on);
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
     });
 
-    // 첫 화면은 히어로만 보이게
-    history.replaceState(null, '', location.pathname);
+    // 섹션 화면은 항상 위에서 시작
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    // brand -> home
-    const brandHome = document.getElementById('brandHome');
-    const homeEl = document.getElementById('home');
+    // 페이드인
+    requestAnimationFrame(() => {
+      document.body.classList.remove('is-switching');
+    });
+  }, 220); // ← 더 느리게 하고 싶으면 300~360으로 올리면 됨
+}
 
-    function goHome(){
-      document.body.classList.remove('view-mode'); // NEW SCREEN MODE OFF
-      setAllInactive();
-      if (homeEl) homeEl.scrollIntoView({ behavior:'smooth', block:'start' });
-    }
+function goHome(){
+  document.body.classList.add('is-switching');
 
-    if (brandHome){
-      brandHome.addEventListener('click', goHome);
-      brandHome.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') goHome();
-      });
-    }
+  setTimeout(() => {
+    // NEW SCREEN MODE OFF
+    document.body.classList.remove('view-mode');
+    setAllInactive();
+
+    if (homeEl) homeEl.scrollIntoView({ behavior:'smooth', block:'start' });
+
+    requestAnimationFrame(() => {
+      document.body.classList.remove('is-switching');
+    });
+  }, 220); // ← 동일하게 조절
+}
   </script>
 </body>
 </html>
