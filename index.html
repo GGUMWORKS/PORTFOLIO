@@ -389,30 +389,8 @@
       btn.addEventListener('click', () => activate(btn.dataset.target));
     });
 
-    /* ✅ 첫 화면에서는 섹션을 띄우지 않음
-       해시(#info 등)로 들어온 경우에만 해당 섹션 오픈 */
+    // 첫 화면은 항상 히어로만 보이게: 주소의 #hash 제거
     history.replaceState(null, '', location.pathname);
-    <script>
-  document.getElementById('y').textContent = new Date().getFullYear();
-
-  const tabs = document.querySelectorAll('.tab');
-  const sections = document.querySelectorAll('.section');
-
-  function activate(id){
-    sections.forEach(s => s.classList.toggle('active', s.id === id));
-    tabs.forEach(t => {
-      const on = t.dataset.target === id;
-      t.classList.toggle('active', on);
-      t.setAttribute('aria-selected', on ? 'true' : 'false');
-    });
-  }
-
-  tabs.forEach(btn => {
-    btn.addEventListener('click', () => activate(btn.dataset.target));
-  });
-
-  // 첫 화면은 항상 히어로만 보이게: 주소의 #hash 제거
-  history.replaceState(null, '', location.pathname);
   </script>
 </body>
 </html>
