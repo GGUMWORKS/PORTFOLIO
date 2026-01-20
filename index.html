@@ -1,52 +1,373 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <title>Woohyun Kim Portfolio</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WOOHYUN KIM | GGUMWORKS</title>
+
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #111;
-      color: #fff;
+    :root{
+      --bg:#070707;
+      --text:#ffffff;
+      --muted:rgba(255,255,255,.70);
+      --line:rgba(255,255,255,.12);
+      --glass:rgba(0,0,0,.45);
+      --max:1200px;
     }
-    header {
-      padding: 80px 40px;
-      text-align: center;
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, "Noto Sans KR", sans-serif;
+      background:
+        radial-gradient(1400px 900px at 50% 15%, rgba(255,255,255,.08), transparent 60%),
+        radial-gradient(900px 700px at 15% 10%, rgba(255,255,255,.05), transparent 60%),
+        var(--bg);
+      color:var(--text);
+      overflow-x:hidden;
     }
-    section {
-      padding: 60px 40px;
-      max-width: 900px;
-      margin: auto;
+
+    /* optional background image hook */
+    .bg{
+      position:fixed; inset:0;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,.78)),
+        var(--bgimg, none);
+      background-size:cover;
+      background-position:center;
+      z-index:-1;
+      filter:saturate(1.05) contrast(1.05);
     }
-    h1 { font-size: 48px; margin-bottom: 10px; }
-    h2 { font-size: 28px; margin-bottom: 20px; }
-    p { line-height: 1.7; opacity: 0.85; }
+
+    a{color:inherit; text-decoration:none}
+
+    .wrap{max-width:var(--max); margin:0 auto; padding:0 28px}
+
+    /* top nav */
+    .nav{
+      position:fixed; top:0; left:0; right:0;
+      height:68px;
+      z-index:20;
+      background: var(--glass);
+      backdrop-filter: blur(12px);
+      border-bottom:1px solid var(--line);
+    }
+    .nav-inner{
+      height:68px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:18px;
+    }
+    .brand{
+      display:flex; align-items:baseline; gap:10px;
+      font-weight:700;
+      letter-spacing:.7px;
+      text-transform:uppercase;
+      font-size:13px;
+      opacity:.92;
+      user-select:none;
+      white-space:nowrap;
+    }
+    .brand small{
+      font-weight:600;
+      font-size:11px;
+      color:var(--muted);
+      letter-spacing:.6px;
+      text-transform:none;
+      opacity:.9;
+    }
+
+    .menu{
+      display:flex; align-items:center; gap:10px;
+      font-size:13px;
+      color:var(--muted);
+      white-space:nowrap;
+    }
+    .menu button{
+      appearance:none;
+      border:1px solid transparent;
+      background:transparent;
+      color:inherit;
+      padding:10px 12px;
+      border-radius:12px;
+      cursor:pointer;
+      letter-spacing:.2px;
+    }
+    .menu button:hover{
+      background: rgba(255,255,255,.06);
+      color:var(--text);
+      border-color: rgba(255,255,255,.10);
+    }
+    .menu button.active{
+      background: rgba(255,255,255,.12);
+      color:var(--text);
+      border-color: rgba(255,255,255,.18);
+    }
+
+    /* main layout */
+    main{
+      min-height:100vh;
+      padding-top:68px; /* nav height */
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .panel{
+      width:100%;
+      padding:90px 0 80px;
+    }
+
+    /* shared section */
+    .section{
+      display:none;
+      animation: fade .22s ease;
+    }
+    .section.active{display:block}
+    @keyframes fade{
+      from{opacity:.0; transform: translateY(6px)}
+      to{opacity:1; transform: translateY(0)}
+    }
+
+    /* HOME */
+    .home{
+      text-align:center;
+      padding:80px 0 60px;
+    }
+    .title{
+      margin:0 0 14px;
+      font-size:64px;
+      line-height:1.02;
+      font-weight:800;
+      letter-spacing:.8px;
+      text-transform:uppercase;
+    }
+    .subtitle{
+      margin:0;
+      font-size:16px;
+      color:var(--muted);
+      letter-spacing:.4px;
+    }
+    .subtitle b{
+      color:var(--text);
+      font-weight:700;
+    }
+
+    /* content blocks */
+    .block{
+      max-width:900px;
+      margin:0 auto;
+      border:1px solid var(--line);
+      border-radius:20px;
+      background: rgba(255,255,255,.03);
+      padding:22px;
+    }
+    .h2{
+      margin:0 0 10px;
+      font-size:18px;
+      letter-spacing:-.2px;
+    }
+    .p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.8;
+      font-size:14px;
+    }
+
+    .grid{
+      margin-top:14px;
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap:14px;
+    }
+    .card{
+      grid-column: span 6;
+      border:1px solid var(--line);
+      border-radius:18px;
+      background: rgba(0,0,0,.22);
+      padding:16px;
+      transition: transform .18s ease, background .18s ease;
+    }
+    .card:hover{transform: translateY(-2px); background: rgba(255,255,255,.05)}
+    .card .t{margin:0 0 8px; font-size:14px}
+    .card .d{margin:0; color:var(--muted); font-size:13px; line-height:1.7}
+
+    .pill{
+      display:inline-flex;
+      margin-top:10px;
+      padding:6px 10px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    footer{
+      padding:24px 0 30px;
+      text-align:center;
+      color: rgba(255,255,255,.45);
+      font-size:12px;
+      border-top:1px solid rgba(255,255,255,.06);
+      background: rgba(0,0,0,.18);
+    }
+
+    @media (max-width: 860px){
+      .title{font-size:44px}
+      .card{grid-column: span 12}
+      .brand small{display:none}
+    }
   </style>
 </head>
+
 <body>
+  <!-- 배경 이미지 쓰고 싶으면 아래 --bgimg에 url을 넣으면 됩니다 -->
+  <div class="bg" style="--bgimg: none;"></div>
 
-<header>
-  <h1>김우현</h1>
-  <p>Art Director / Stage Designer / Spatial Designer</p>
-</header>
+  <div class="nav">
+    <div class="wrap nav-inner">
+      <div class="brand">
+        GGUMWORKS
+        <small>design studio</small>
+      </div>
 
-<section>
-  <h2>About</h2>
-  <p>
-    공간과 이미지를 통해 서사를 구조화하는 아트디렉터이자 시노그래퍼.
-  </p>
-</section>
+      <div class="menu" role="tablist" aria-label="Top Navigation">
+        <button class="tab active" data-target="info" role="tab" aria-selected="true">info</button>
+        <button class="tab" data-target="project" role="tab" aria-selected="false">project</button>
+        <button class="tab" data-target="prize" role="tab" aria-selected="false">prize</button>
+        <button class="tab" data-target="contact" role="tab" aria-selected="false">contact</button>
+      </div>
+    </div>
+  </div>
 
-<section>
-  <h2>Projects</h2>
-  <p>프로젝트 정리는 여기에 추가됩니다.</p>
-</section>
+  <main>
+    <div class="wrap panel">
 
-<section>
-  <h2>Contact</h2>
-  <p>Email: your@email.com</p>
-</section>
+      <!-- HOME HEADER (항상 상단에 깔고 싶으면 여기를 고정영역으로 두고, 탭 내용만 아래 바뀌게도 가능) -->
+      <div class="home">
+        <h1 class="title">WOOHYUN KIM</h1>
+        <p class="subtitle">design studio <b>GGUMWORKS</b></p>
+      </div>
 
+      <!-- INFO -->
+      <section id="info" class="section active">
+        <div class="block">
+          <p class="h2">Info</p>
+          <p class="p">
+            여기에 감독님 소개, 핵심 키워드, 작업 철학을 넣습니다.<br/>
+            예: 공간과 이미지를 통해 서사를 구조화하고, 감각과 논리를 연결해 흐름을 설계합니다.
+          </p>
+          <div class="grid">
+            <div class="card">
+              <p class="t">Focus</p>
+              <p class="d">Spatial Narrative · Stage / Pop-up · Cinematic Direction</p>
+              <div class="pill">direction</div>
+            </div>
+            <div class="card">
+              <p class="t">Tools</p>
+              <p class="d">Unreal · Midjourney · DaVinci · Adobe</p>
+              <div class="pill">pipeline</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PROJECT -->
+      <section id="project" class="section">
+        <div class="block">
+          <p class="h2">Project</p>
+          <p class="p">여기는 프로젝트 카드/썸네일 갤러리로 확장합니다.</p>
+
+          <div class="grid">
+            <div class="card">
+              <p class="t">Project 01</p>
+              <p class="d">제목 · 역할 · 연도 · 한 줄 설명</p>
+              <div class="pill">stage</div>
+            </div>
+            <div class="card">
+              <p class="t">Project 02</p>
+              <p class="d">제목 · 역할 · 연도 · 한 줄 설명</p>
+              <div class="pill">spatial</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PRIZE -->
+      <section id="prize" class="section">
+        <div class="block">
+          <p class="h2">Prize</p>
+          <p class="p">수상, 전시, 기사, 인터뷰, 선정 이력 등을 리스트업합니다.</p>
+
+          <div class="grid">
+            <div class="card">
+              <p class="t">2025 · Award / Selection</p>
+              <p class="d">기관명 · 프로젝트명 · 간단 설명</p>
+              <div class="pill">award</div>
+            </div>
+            <div class="card">
+              <p class="t">2024 · Feature / Press</p>
+              <p class="d">매체명 · 제목 · 링크</p>
+              <div class="pill">press</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CONTACT -->
+      <section id="contact" class="section">
+        <div class="block">
+          <p class="h2">Contact</p>
+          <p class="p">
+            아래 링크만 감독님 정보로 교체하면 됩니다.
+          </p>
+
+          <div class="grid">
+            <div class="card">
+              <p class="t">Email</p>
+              <p class="d"><a href="mailto:your@email.com">your@email.com</a></p>
+              <div class="pill">mail</div>
+            </div>
+            <div class="card">
+              <p class="t">Instagram</p>
+              <p class="d"><a href="#" onclick="alert('인스타 주소를 넣어주세요'); return false;">link</a></p>
+              <div class="pill">social</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer>
+    © <span id="y"></span> GGUMWORKS
+  </footer>
+
+  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    const tabs = document.querySelectorAll('.tab');
+    const sections = document.querySelectorAll('.section');
+
+    function activate(id){
+      sections.forEach(s => s.classList.toggle('active', s.id === id));
+      tabs.forEach(t => {
+        const on = t.dataset.target === id;
+        t.classList.toggle('active', on);
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+      history.replaceState(null, '', '#' + id);
+    }
+
+    tabs.forEach(btn => {
+      btn.addEventListener('click', () => activate(btn.dataset.target));
+    });
+
+    // URL 해시로 진입 시 해당 탭 오픈
+    const initial = (location.hash || '#info').replace('#','');
+    const exists = [...sections].some(s => s.id === initial);
+    activate(exists ? initial : 'info');
+  </script>
 </body>
 </html>
