@@ -44,6 +44,14 @@
 
     .wrap{max-width:var(--max); margin:0 auto; padding:0 28px}
 
+    /* ✅ nav 전용: 좌/우 끝까지 쓰는 풀폭 래퍼 */
+    .wrap-full{
+      width:100%;
+      max-width:none;
+      margin:0;
+      padding:0 28px; /* 좌우 여백만 유지 */
+    }
+
     /* top nav */
     .nav{
       position:fixed; top:0; left:0; right:0;
@@ -79,11 +87,15 @@
       opacity:.9;
     }
 
+    /* ✅ 우측 상단 메뉴: 대문자 + 크기 업 */
     .menu{
       display:flex; align-items:center; gap:10px;
-      font-size:13px;
-      color:var(--muted);
+      font-size:15px;
+      font-weight:700;
+      color:rgba(255,255,255,.80);
+      letter-spacing:.8px;
       white-space:nowrap;
+      text-transform:uppercase;
     }
     .menu button{
       appearance:none;
@@ -93,17 +105,18 @@
       padding:10px 12px;
       border-radius:12px;
       cursor:pointer;
-      letter-spacing:.2px;
+      letter-spacing:.8px;
+      text-transform:uppercase;
     }
     .menu button:hover{
-      background: rgba(255,255,255,.06);
+      background: rgba(255,255,255,.08);
       color:var(--text);
-      border-color: rgba(255,255,255,.10);
+      border-color: rgba(255,255,255,.16);
     }
     .menu button.active{
-      background: rgba(255,255,255,.12);
+      background: rgba(255,255,255,.14);
       color:var(--text);
-      border-color: rgba(255,255,255,.18);
+      border-color: rgba(255,255,255,.26);
     }
 
     /* main layout */
@@ -203,12 +216,13 @@
       color:var(--muted);
     }
 
+    /* ✅ footer 분리선: 뚜렷한 화이트 */
     footer{
       padding:24px 0 30px;
       text-align:center;
       color: rgba(255,255,255,.45);
       font-size:12px;
-      border-top:1px solid rgba(255,255,255,.06);
+      border-top:1px solid rgba(255,255,255,.65);
       background: rgba(0,0,0,.18);
     }
 
@@ -216,6 +230,7 @@
       .title{font-size:44px}
       .card{grid-column: span 12}
       .brand small{display:none}
+      .menu{font-size:13px; letter-spacing:.6px}
     }
   </style>
 </head>
@@ -225,17 +240,17 @@
   <div class="bg" style="--bgimg: none;"></div>
 
   <div class="nav">
-    <div class="wrap nav-inner">
+    <div class="wrap-full nav-inner">
       <div class="brand">
         GGUMWORKS
         <small>design studio</small>
       </div>
 
       <div class="menu" role="tablist" aria-label="Top Navigation">
-        <button class="tab active" data-target="info" role="tab" aria-selected="true">info</button>
-        <button class="tab" data-target="project" role="tab" aria-selected="false">project</button>
-        <button class="tab" data-target="prize" role="tab" aria-selected="false">prize</button>
-        <button class="tab" data-target="contact" role="tab" aria-selected="false">contact</button>
+        <button class="tab" data-target="info" role="tab" aria-selected="false">INFO</button>
+        <button class="tab" data-target="project" role="tab" aria-selected="false">PROJECT</button>
+        <button class="tab" data-target="prize" role="tab" aria-selected="false">PRIZE</button>
+        <button class="tab" data-target="contact" role="tab" aria-selected="false">CONTACT</button>
       </div>
     </div>
   </div>
@@ -243,14 +258,13 @@
   <main>
     <div class="wrap panel">
 
-      <!-- HOME HEADER (항상 상단에 깔고 싶으면 여기를 고정영역으로 두고, 탭 내용만 아래 바뀌게도 가능) -->
       <div class="home">
         <h1 class="title">WOOHYUN KIM</h1>
         <p class="subtitle">design studio <b>GGUMWORKS</b></p>
       </div>
 
       <!-- INFO -->
-      <section id="info" class="section active">
+      <section id="info" class="section">
         <div class="block">
           <p class="h2">Info</p>
           <p class="p">
@@ -318,9 +332,7 @@
       <section id="contact" class="section">
         <div class="block">
           <p class="h2">Contact</p>
-          <p class="p">
-            아래 링크만 감독님 정보로 교체하면 됩니다.
-          </p>
+          <p class="p">아래 링크만 감독님 정보로 교체하면 됩니다.</p>
 
           <div class="grid">
             <div class="card">
@@ -364,10 +376,13 @@
       btn.addEventListener('click', () => activate(btn.dataset.target));
     });
 
-    // URL 해시로 진입 시 해당 탭 오픈
-    const initial = (location.hash || '#info').replace('#','');
-    const exists = [...sections].some(s => s.id === initial);
-    activate(exists ? initial : 'info');
+    /* ✅ 첫 화면에서는 섹션을 띄우지 않음
+       해시(#info 등)로 들어온 경우에만 해당 섹션 오픈 */
+    if (location.hash) {
+      const initial = location.hash.replace('#','');
+      const exists = [...sections].some(s => s.id === initial);
+      if (exists) activate(initial);
+    }
   </script>
 </body>
 </html>
