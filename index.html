@@ -29,7 +29,6 @@
       overflow-x:hidden;
     }
 
-    /* optional background image hook */
     .bg{
       position:fixed; inset:0;
       background:
@@ -43,10 +42,8 @@
 
     a{color:inherit; text-decoration:none}
 
-    /* ✅ 오타 수정: :0 auto -> margin:0 auto */
     .wrap{max-width:var(--max); margin:0 auto; padding:0 28px}
 
-    /* nav 전용: 좌/우 끝까지 쓰는 풀폭 래퍼 */
     .wrap-full{
       width:100%;
       max-width:none;
@@ -54,7 +51,6 @@
       padding:0 28px;
     }
 
-    /* top nav */
     .nav{
       position:fixed; top:0; left:0; right:0;
       height:68px;
@@ -91,7 +87,6 @@
       opacity:.9;
     }
 
-    /* top menu */
     .menu{
       display:flex; align-items:center; gap:10px;
       font-size:15px;
@@ -123,7 +118,6 @@
       border-color: rgba(255,255,255,.26);
     }
 
-    /* main layout */
     main{
       min-height:100vh;
       padding-top:68px;
@@ -140,7 +134,7 @@
     .section{
       display:none;
       animation: fade .22s ease;
-      scroll-margin-top:88px; /* nav 가림 방지 */
+      scroll-margin-top:88px;
     }
     .section.active{display:block}
     @keyframes fade{
@@ -244,6 +238,19 @@
       .brand small{display:none}
       .menu{font-size:13px; letter-spacing:.6px}
     }
+
+    /* ===========================
+       ✅ NEW SCREEN MODE (추가)
+       홈 화면은 그대로, 탭 눌렀을 때만 적용됨
+       =========================== */
+    body.view-mode main{ align-items:flex-start; }
+    body.view-mode .home{
+      display:none;
+      animation:none;
+    }
+    body.view-mode .panel{
+      padding:40px 0 80px; /* 탭 화면에서 위 여백만 살짝 정리 (홈에는 영향 없음) */
+    }
   </style>
 </head>
 
@@ -271,11 +278,7 @@
 
       <div class="home" id="home">
         <h1 class="title">WOOHYUN KIM</h1>
-
-        <p class="roles">
-          Scenic Design &nbsp; : &nbsp; Concept Art &nbsp; : &nbsp; Art Direct
-        </p>
-
+        <p class="roles">Scenic Design &nbsp; : &nbsp; Concept Art &nbsp; : &nbsp; Art Direct</p>
         <p class="subtitle">DESIGN STUDIO <b>GGUMWORKS</b></p>
       </div>
 
@@ -307,7 +310,6 @@
         <div class="block">
           <p class="h2">Project</p>
           <p class="p">여기는 프로젝트 카드/썸네일 갤러리로 확장합니다.</p>
-
           <div class="grid">
             <div class="card">
               <p class="t">Project 01</p>
@@ -328,7 +330,6 @@
         <div class="block">
           <p class="h2">Prize</p>
           <p class="p">수상, 전시, 기사, 인터뷰, 선정 이력 등을 리스트업합니다.</p>
-
           <div class="grid">
             <div class="card">
               <p class="t">2025 · Award / Selection</p>
@@ -349,7 +350,6 @@
         <div class="block">
           <p class="h2">Contact</p>
           <p class="p">아래 링크만 감독님 정보로 교체하면 됩니다.</p>
-
           <div class="grid">
             <div class="card">
               <p class="t">Email</p>
@@ -388,7 +388,10 @@
       });
     }
 
+    // ✅ "새 화면" 전환: 홈 숨기기 + 섹션만 보여주기 + 위로 스크롤
     function activate(id){
+      document.body.classList.add('view-mode'); // NEW SCREEN MODE ON
+
       sections.forEach(s => s.classList.toggle('active', s.id === id));
       tabs.forEach(t => {
         const on = t.dataset.target === id;
@@ -396,8 +399,8 @@
         t.setAttribute('aria-selected', on ? 'true' : 'false');
       });
 
-      const target = document.getElementById(id);
-      if (target) target.scrollIntoView({ behavior:'smooth', block:'start' });
+      // 섹션 화면은 항상 위에서 시작(스크롤 전환 느낌)
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     tabs.forEach(btn => {
@@ -413,6 +416,7 @@
     const homeEl = document.getElementById('home');
 
     function goHome(){
+      document.body.classList.remove('view-mode'); // NEW SCREEN MODE OFF
       setAllInactive();
       if (homeEl) homeEl.scrollIntoView({ behavior:'smooth', block:'start' });
     }
