@@ -17,9 +17,10 @@
 
     *{box-sizing:border-box}
     html,body{height:100%}
+
     body{
       margin:0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, "Noto Sans KR", sans-serif;
+      font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Arial, "Noto Sans KR", sans-serif;
       background:
         radial-gradient(1400px 900px at 50% 15%, rgba(255,255,255,.08), transparent 60%),
         radial-gradient(900px 700px at 15% 10%, rgba(255,255,255,.05), transparent 60%),
@@ -42,14 +43,15 @@
 
     a{color:inherit; text-decoration:none}
 
-    .wrap{max-width:var(--max); :0 auto; padding:0 28px}
+    /* ✅ 오타 수정: :0 auto -> margin:0 auto */
+    .wrap{max-width:var(--max); margin:0 auto; padding:0 28px}
 
-    /* ✅ nav 전용: 좌/우 끝까지 쓰는 풀폭 래퍼 */
+    /* nav 전용: 좌/우 끝까지 쓰는 풀폭 래퍼 */
     .wrap-full{
       width:100%;
       max-width:none;
-      :0;
-      padding:0 28px; /* 좌우 여백만 유지 */
+      margin:0;
+      padding:0 28px;
     }
 
     /* top nav */
@@ -57,7 +59,7 @@
       position:fixed; top:0; left:0; right:0;
       height:68px;
       z-index:20;
-      background: var(--glass);
+      background:var(--glass);
       backdrop-filter: blur(12px);
       border-bottom:1px solid rgba(255,255,255,.65);
     }
@@ -68,6 +70,7 @@
       justify-content:space-between;
       gap:18px;
     }
+
     .brand{
       display:flex; align-items:baseline; gap:10px;
       font-weight:700;
@@ -88,7 +91,7 @@
       opacity:.9;
     }
 
-    /* ✅ 우측 상단 메뉴: 대문자 + 크기 업 */
+    /* top menu */
     .menu{
       display:flex; align-items:center; gap:10px;
       font-size:15px;
@@ -123,7 +126,7 @@
     /* main layout */
     main{
       min-height:100vh;
-      padding-top:68px; /* nav height */
+      padding-top:68px;
       display:flex;
       align-items:center;
       justify-content:center;
@@ -133,14 +136,15 @@
       padding:90px 0 80px;
     }
 
-    /* shared section */
+    /* sections */
     .section{
       display:none;
       animation: fade .22s ease;
+      scroll-margin-top:88px; /* nav 가림 방지 */
     }
     .section.active{display:block}
     @keyframes fade{
-      from{opacity:.0; transform: translateY(6px)}
+      from{opacity:0; transform: translateY(6px)}
       to{opacity:1; transform: translateY(0)}
     }
 
@@ -150,23 +154,23 @@
       padding:80px 0 60px;
     }
     .title{
-      margin:0 0 40px;  
+      margin:0 0 40px;
       font-size:110px;
       line-height:1.02;
       font-weight:500;
       letter-spacing:.8px;
       text-transform:uppercase;
     }
-.roles{
-  margin:0 0 40px;  
-  text-align:center;
-  font-size:16px;
-  letter-spacing:.6px;
-  color:rgba(255,255,255,.65);
-  font-weight:500;
-}
+    .roles{
+      margin:0 0 40px;
+      text-align:center;
+      font-size:16px;
+      letter-spacing:.6px;
+      color:rgba(255,255,255,.65);
+      font-weight:500;
+    }
     .subtitle{
-    margin:0 0 0px;
+      margin:0;
       font-size:16px;
       color:var(--muted);
       letter-spacing:.4px;
@@ -225,7 +229,6 @@
       color:var(--muted);
     }
 
-    /* ✅ footer 분리선: 뚜렷한 화이트 */
     footer{
       padding:24px 0 30px;
       text-align:center;
@@ -245,22 +248,20 @@
 </head>
 
 <body>
-  <!-- 배경 이미지 쓰고 싶으면 아래 --bgimg에 url을 넣으면 됩니다 -->
   <div class="bg" style="--bgimg: none;"></div>
 
   <div class="nav">
     <div class="wrap-full nav-inner">
-      
       <div class="brand" id="brandHome" role="button" tabindex="0" aria-label="Go to Home">
-  GGUMWORKS
-  <small>DESIGN STUDIO</small>
-</div>
+        GGUMWORKS
+        <small>DESIGN STUDIO</small>
+      </div>
 
       <div class="menu" role="tablist" aria-label="Top Navigation">
-        <button class="tab" data-target="info" role="tab" aria-selected="false">INFO</button>
-        <button class="tab" data-target="project" role="tab" aria-selected="false">PROJECT</button>
-        <button class="tab" data-target="prize" role="tab" aria-selected="false">PRIZE</button>
-        <button class="tab" data-target="contact" role="tab" aria-selected="false">CONTACT</button>
+        <button class="tab" data-target="info" role="tab">INFO</button>
+        <button class="tab" data-target="project" role="tab">PROJECT</button>
+        <button class="tab" data-target="prize" role="tab">PRIZE</button>
+        <button class="tab" data-target="contact" role="tab">CONTACT</button>
       </div>
     </div>
   </div>
@@ -268,16 +269,15 @@
   <main>
     <div class="wrap panel">
 
-<div class="home" id="home">
-  <h1 class="title">WOOHYUN KIM</h1>
+      <div class="home" id="home">
+        <h1 class="title">WOOHYUN KIM</h1>
 
-  <p class="roles">
-    Scenic Design &nbsp; : &nbsp; Concept Art &nbsp; : &nbsp; Art Direct
-  </p>
+        <p class="roles">
+          Scenic Design &nbsp; : &nbsp; Concept Art &nbsp; : &nbsp; Art Direct
+        </p>
 
-  <p class="subtitle">DESIGN STUDIO <b>GGUMWORKS</b></p>
-</div>
-
+        <p class="subtitle">DESIGN STUDIO <b>GGUMWORKS</b></p>
+      </div>
 
       <!-- INFO -->
       <section id="info" class="section">
@@ -373,10 +373,20 @@
   </footer>
 
   <script>
-    document.getElementById('y').textContent = new Date().getFullYear();
+    // footer year
+    const y = document.getElementById('y');
+    if (y) y.textContent = new Date().getFullYear();
 
     const tabs = document.querySelectorAll('.tab');
     const sections = document.querySelectorAll('.section');
+
+    function setAllInactive(){
+      sections.forEach(s => s.classList.remove('active'));
+      tabs.forEach(t => {
+        t.classList.remove('active');
+        t.setAttribute('aria-selected', 'false');
+      });
+    }
 
     function activate(id){
       sections.forEach(s => s.classList.toggle('active', s.id === id));
@@ -385,37 +395,34 @@
         t.classList.toggle('active', on);
         t.setAttribute('aria-selected', on ? 'true' : 'false');
       });
+
+      const target = document.getElementById(id);
+      if (target) target.scrollIntoView({ behavior:'smooth', block:'start' });
     }
 
     tabs.forEach(btn => {
+      btn.setAttribute('aria-selected', 'false');
       btn.addEventListener('click', () => activate(btn.dataset.target));
     });
 
-    // 첫 화면은 항상 히어로만 보이게: 주소의 #hash 제거
+    // 첫 화면은 히어로만 보이게
     history.replaceState(null, '', location.pathname);
+
+    // brand -> home
     const brandHome = document.getElementById('brandHome');
-const homeEl = document.getElementById('home');
+    const homeEl = document.getElementById('home');
 
-function goHome(){
-  // 섹션 닫기(열려있던 박스들 제거)
-  sections.forEach(s => s.classList.remove('active'));
-  // 메뉴 active도 제거
-  tabs.forEach(t => {
-    t.classList.remove('active');
-    t.setAttribute('aria-selected', 'false');
-  });
-  // 홈으로 스크롤
-  homeEl.scrollIntoView({behavior:'smooth', block:'start'});
-}
+    function goHome(){
+      setAllInactive();
+      if (homeEl) homeEl.scrollIntoView({ behavior:'smooth', block:'start' });
+    }
 
-// 클릭
-brandHome.addEventListener('click', goHome);
-
-// 엔터키로도 동작(접근성)
-brandHome.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter' || e.key === ' ') goHome();
-});
-
+    if (brandHome){
+      brandHome.addEventListener('click', goHome);
+      brandHome.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') goHome();
+      });
+    }
   </script>
 </body>
 </html>
