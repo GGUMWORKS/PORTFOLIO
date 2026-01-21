@@ -255,14 +255,15 @@
        ABOUT 레퍼런스 레이아웃 (추가/반영)
        =========================== */
 
-    .about-shell{
-      max-width: 980px;
-      margin: 0 auto;
-      padding: 72px 28px 90px;
-      background: #ffffff;
-      color: #111;
-    }
+.about-shell{
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 72px 28px 90px;
 
+  background: #000000;                     /* ✅ 블랙 배경 */
+  color: #ffffff;                          /* ✅ 기본 텍스트 흰색 */
+  border: 1px solid rgba(255,255,255,.65); /* ✅ 얇은 흰 선 테두리 */
+}
     .about-head{
       text-align:center;
       margin-bottom: 44px;
@@ -353,6 +354,22 @@
       .about-ico{ width:44px; height:44px; font-size:18px; }
       .about-rule{ width: 92%; }
     }
+/* ABOUT: dark tune */
+.about-title{ color:#ffffff; }
+
+.about-quote{ color:#ffffff; }
+
+.about-rule{ background: rgba(255,255,255,.35); }
+
+.about-list{ border-top: 1px solid rgba(255,255,255,.18); }
+
+.about-item{ border-bottom: 1px solid rgba(255,255,255,.18); }
+
+.about-ico{ color: rgba(255,255,255,.55); }
+
+.about-txt h3{ color:#ffffff; }
+
+.about-txt p{ color: rgba(255,255,255,.70); }
 
   </style>
 </head>
@@ -391,13 +408,6 @@
 
           <header class="about-head">
             <h2 class="about-title">about</h2>
-            <nav class="about-subnav" aria-label="About sub navigation">
-              <a class="active" href="#" onclick="return false;">about</a>
-              <span>·</span>
-              <a href="#" onclick="return false;">contact</a>
-              <span>·</span>
-              <a href="#" onclick="return false;">organization</a>
-            </nav>
           </header>
 
           <section class="about-hero" aria-label="About quote">
